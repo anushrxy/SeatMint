@@ -1,6 +1,26 @@
 import React from "react";
+import { app } from "../assets/Firebaseconfig";
+import { getDatabase, onValue, ref, set} from "firebase/database";
 
 function Hero() {
+
+    const db = getDatabase(app);
+    const writeData = () => {
+        console.log("Start")
+        set(ref(db, 'events/MagicShow'),{
+            contract: "0x Something",
+            picture: "ipds.io/something",
+            date: "2023-05-29",
+        });
+    }
+
+    const readData = () => {
+        const magicShowRef = ref(db, 'events/MagicShow');
+        onValue(magicShowRef, (snapshot) => {
+            const data = snapshot.val();
+            console.log(data);
+        })
+    }
   return (
     <>
       <section>
@@ -10,7 +30,7 @@ function Hero() {
               <div class="relative h-64 sm:h-80 lg:h-full">
                 <img
                   alt="House"
-                  src="https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+                  src="https://res.cloudinary.com/dlvmyc0x3/image/upload/v1683205622/pexels-teddy-yang_3-2_ncqbjd.jpg"
                   class="absolute inset-0 h-full w-full object-cover"
                 />
               </div>
@@ -24,7 +44,7 @@ function Hero() {
                   Revolutionizing Ticketing: Book, Own, and Experience with NFTs
                 </h2>
 
-                <p class="mt-4 text-gray-600">
+                <p class="mt-4 text-gray-400">
                   Our app is changing the way people book and own tickets by
                   leveraging the power of NFTs. With our user-friendly
                   interface, you can easily book tickets to your favorite events
@@ -34,12 +54,12 @@ function Hero() {
                   way. Join us today and experience the future of ticketing!
                 </p>
 
-                <a
-                  href="#"
-                  class="mt-8 inline-block rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
+                <button
+                  class="mt-8 inline-block rounded border border-teal-600 bg-teal-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-teal-600 focus:outline-none focus:ring active:text-teal-500"
+                  onClick={readData}
                 >
-                  Get in Touch
-                </a>
+                  Buy Tickets!
+                </button>
               </div>
             </div>
           </div>
