@@ -1,21 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function NavBuyer() {
+function NavSeller() {
   return (
     <header
       aria-label="Site Header"
       className="backdrop-blur-xl sticky top-0 z-50"
     >
-      <div className="mx-auto w-screen px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto mt-0 w-screen px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex-1 md:items-center md:gap-12">
             <Link className="block text-teal-600 dark:text-teal-300" to="/">
               <span className="sr-only">Home</span>
               <div className="flex text-xl">
-                <img 
-                src="https://res.cloudinary.com/dlvmyc0x3/image/upload/v1683284085/SeatMint_Logo-transformed-transformed_rdmdsm.png"
-                width="200rem"
+                <img
+                  src="https://res.cloudinary.com/dlvmyc0x3/image/upload/v1683284085/SeatMint_Logo-transformed-transformed_rdmdsm.png"
+                  width="200rem"
                 ></img>
               </div>
             </Link>
@@ -27,30 +27,29 @@ function NavBuyer() {
                 <li>
                   <Link
                     className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                    to="/buyer/buy"
+                    to="/seller/list"
                   >
-                    Buy Tickets
+                    List Tickets
                   </Link>
                 </li>
 
                 <li>
                   <Link
                     className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                    to="/buyer/resell"
+                    to="/seller/view-sales"
                   >
-                    Resell Tickets
+                    View Sales
                   </Link>
                 </li>
 
                 <li>
                   <Link
                     className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                    to="/buyer/view-owned"
+                    to="/seller/others"
                   >
-                    Owned Tickets
+                    Coming Soon...
                   </Link>
                 </li>
-
               </ul>
             </nav>
 
@@ -80,4 +79,4 @@ function NavBuyer() {
   );
 }
 
-export default NavBuyer;
+export default NavSeller;
