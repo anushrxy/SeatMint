@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "./App.css";
 import { Routes, Route } from 'react-router-dom';
+import AppState from "./Context/appState";
 import Navbar from "./Components/Navbar.jsx";
 import Hero from "./Components/Hero.jsx";
 import UspSection from "./Components/UspSection.jsx";
@@ -11,17 +12,28 @@ import ListHeadings from "./Components/SellerComp/ListHeadings.jsx";
 import NavSeller from "./Components/SellerComp/NavSeller.jsx";
 import ListingForm from "./Components/SellerComp/ListingForm.jsx";
 import ViewSales from "./Components/SellerComp/ViewSales.jsx";
+import appContext from "./Context/appContext";
+import { Delete } from "./Components/SellerComp/Delete";
+
+import { WagmiConfig, createClient, configureChains, mainnet } from 'wagmi'
+import { publicProvider } from 'wagmi/providers/public'
+import { polygonMumbai } from 'wagmi/chains'
 
 
 
 
 function App() {
 
+const state = useContext(appContext);
+
+
+
   
   
   return (
     <>
       <div>
+        <AppState>
         <Routes>
           <Route  path="/" element={
             <>
@@ -119,11 +131,12 @@ function App() {
             h2="With Exciting Features."
             description=""
             />
+            <Delete/>
             </>
           }/>
         </Routes>
 
-
+      </AppState>
       </div>
     </>
   );

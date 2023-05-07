@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import appContext from "../Context/appContext";
+
 
 function Navbar() {
+
+  const state = useContext(appContext);
   return (
     <header
       aria-label="Site Header"
@@ -84,7 +88,7 @@ function Navbar() {
               <div className="sm:flex sm:gap-4">
                 <Link
                   className="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow dark:hover:bg-teal-700 dark:hover:text-white"
-                  to="/buyer"
+                  to= { state.connected ? "/buyer" : console.log("Connect Metamask First.") }
                 >
                   Login as Buyer
                 </Link>

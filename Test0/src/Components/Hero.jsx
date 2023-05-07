@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { app } from "../assets/Firebaseconfig";
 import { getDatabase, onValue, ref, set} from "firebase/database";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
+import appContext from "../Context/appContext";
 
 function Hero() {
 
@@ -22,20 +23,36 @@ function Hero() {
     //         console.log(data);
     //     })
 
+    const state = useContext(appContext);
+
     const connectMetamask = async () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const userAddress = await provider.send("eth_requestAccounts", []);
       console.log(userAddress[0]);
       const signer = provider.getSigner();
 
+      if(userAddress[0]){
+        state.setConnected(true);
+        console.log(state.connected);
+      }
+
       const contractAdd = "0x15bd20Ae6a8d037c25ad953d578ECE7185e2D3B9";
-      const contractABI = ["function mint(address recipient, string memory tokenURI, uint256 quantity)"];
+      const contractABI = [
+        {
+          name: 'mint',
+          type: 'function',
+          stateMutability: 'nonpayable',
+          inputs: [],
+          outputs: [],
+      },
+      ];
       const tokenURI = "https://ipfs.io/ipfs/bafyreid3nnmark6n22d5bxy6kshdznzogkkk5zw4kpurm3idrkdkdjvdlm/metadata.json";
 
       const mintContract = new ethers.Contract(contractAdd, contractABI, signer);
-      const mintNFT = await mintContract.mint(userAddress[0], tokenURI, "1", {
-        // gasLimit: 100000
-      }) ;
+      const mintNFT = await mintContract.mint(
+        // userAddress[0], tokenURI, "1",
+        {gasLimit: BigNumber.from(210000)}
+      );
       console.log(mintNFT);
     }
 
