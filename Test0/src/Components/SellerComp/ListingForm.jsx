@@ -1,6 +1,47 @@
 import React from "react";
+import { useState } from "react";
+// import api from 'api';
+
 
 function ListingForm() {
+  const [eventName, seteventName] = useState("");
+  const [genre, setgenre] = useState("");
+  const [venue, setvenue] = useState("");
+  const [file, setfile] = useState(null);
+  const [quantity, setquantity] = useState(0);
+  const [price, setprice] = useState(0);
+
+  const [dataIPFS, setdataIPFS] = useState("");
+
+  const [ipfsURI, setipfsURI] = useState("");
+  const [imageURI, setimageURI] = useState("");
+
+  const createEvent = async () => {
+
+    // Verbwire Config
+    // const sdk = api('@verbwire/v1.0#bmqq91mlh2f0wis');
+    // sdk.auth("sk_live_2193b1f6-41cf-4d27-a182-2c9b94ac495b");
+
+    // Storing Metadata on IPFS.
+    
+
+    // await sdk.postNftStoreMetadatafromimage(
+    //     {
+    //       description: `SeatMint Ticket for ${eventName}`,
+    //       name: eventName,
+    //       filePath: file,
+    //       data: `[
+    //         {'trait_type': 'Venue', 'value': ${venue}},
+    //         {'trait_type': 'Genre', 'value': ${genre}},
+    //     ]`,
+    //     },
+    //     { accept: "application/json" }
+    //   )
+    //   .then(({ data }) => setdataIPFS(data))
+    //   .catch((err) => console.error(err));
+    //   console.log(dataIPFS);
+  };
+
   return (
     <>
       <section className="mx-auto">
@@ -9,7 +50,7 @@ function ListingForm() {
             <div className="rounded-lg bg-gray-800 p-8 shadow-lg  lg:p-12">
               <form action="" className="space-y-4">
                 <div>
-                  <label className="sr-only" for="event-name">
+                  <label className="sr-only" htmlFor="event-name">
                     Event Name
                   </label>
                   <input
@@ -17,12 +58,13 @@ function ListingForm() {
                     placeholder="Event Name"
                     type="event-name"
                     id="event-name"
+                    onChange={(e) => seteventName(e.target.value)}
                   />
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="sr-only" for="venue">
+                    <label className="sr-only" htmlFor="venue">
                       Venue
                     </label>
                     <input
@@ -30,11 +72,12 @@ function ListingForm() {
                       placeholder="Venue"
                       type="Venue"
                       id="Venue"
+                      onChange={(e) => setvenue(e.target.value)}
                     />
                   </div>
 
                   <div>
-                    <label className="sr-only" for="genre">
+                    <label className="sr-only" htmlFor="genre">
                       Genre
                     </label>
                     <input
@@ -42,11 +85,12 @@ function ListingForm() {
                       placeholder="Genre"
                       type="genre"
                       id="genre"
+                      onChange={(e) => setgenre(e.target.value)}
                     />
                   </div>
                 </div>
                 <div>
-                  <label for="file-input" class="sr-only">
+                  <label htmlFor="file-input" className="sr-only">
                     Choose file
                   </label>
                   <input
@@ -54,16 +98,17 @@ function ListingForm() {
                     name="file-input"
                     id="file-input"
                     placeholder="Upload NFT Image."
-                    class="block w-full shadow-sm rounded-md text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400
+                    className="block w-full shadow-sm rounded-md text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400
                     file:bg-transparent file:border-0
                     file:bg-gray-200 file:mr-4
                     file:py-3 file:px-4
                     dark:file:bg-gray-600 dark:file:text-gray-200"
+                    onChange={(e) => setfile(e.target.files[0])}
                   ></input>
                 </div>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="sr-only" for="seats">
+                    <label className="sr-only" htmlFor="seats">
                       Seats Quantity
                     </label>
                     <input
@@ -71,11 +116,12 @@ function ListingForm() {
                       placeholder="Seats Quantity"
                       type="seats"
                       id="seats"
+                      onChange={(e) => setquantity(e.target.value)}
                     />
                   </div>
 
                   <div>
-                    <label className="sr-only" for="price">
+                    <label className="sr-only" htmlFor="price">
                       Price
                     </label>
                     <input
@@ -83,19 +129,21 @@ function ListingForm() {
                       placeholder="Price Per Ticket"
                       type="price"
                       id="price"
+                      onChange={(e) => setprice(e.target.value)}
                     />
                   </div>
                 </div>
-
-                <div className="mt-4">
-                  <button
-                    type="submit"
-                    className="inline-block w-full rounded-lg bg-teal-600 px-5 py-3 font-medium text-white sm:w-auto"
-                  >
-                    List Tickets
-                  </button>
-                </div>
               </form>
+
+              <div className="mt-4">
+                <button
+                  type="submit"
+                  className="inline-block w-full rounded-lg bg-teal-600 px-5 py-3 font-medium text-white sm:w-auto"
+                  onClick={createEvent}
+                >
+                  List Tickets
+                </button>
+              </div>
             </div>
           </div>
         </div>

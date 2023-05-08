@@ -1,62 +1,67 @@
 import React, { useContext } from "react";
 import { app } from "../assets/Firebaseconfig";
-import { getDatabase, onValue, ref, set} from "firebase/database";
+import { getDatabase, onValue, ref, set } from "firebase/database";
 import { BigNumber, ethers } from "ethers";
 import appContext from "../Context/appContext";
+import { parseEther } from "ethers/lib/utils.js";
 
 function Hero() {
+  // const db = getDatabase(app);
+  // const writeData = () => {
+  //     console.log("Start")
+  //     set(ref(db, 'events/MagicShow'),{
+  //         contract: "0x Something",
+  //         picture: "ipds.io/something",
+  //         date: "2023-05-29",
+  //     });
+  // }
 
-    // const db = getDatabase(app);
-    // const writeData = () => {
-    //     console.log("Start")
-    //     set(ref(db, 'events/MagicShow'),{
-    //         contract: "0x Something",
-    //         picture: "ipds.io/something",
-    //         date: "2023-05-29",
-    //     });
-    // }
+  // const readData = () => {
+  //     const magicShowRef = ref(db, 'events/MagicShow');
+  //     onValue(magicShowRef, (snapshot) => {
+  //         const data = snapshot.val();
+  //         console.log(data);
+  //     })
 
-    // const readData = () => {
-    //     const magicShowRef = ref(db, 'events/MagicShow');
-    //     onValue(magicShowRef, (snapshot) => {
-    //         const data = snapshot.val();
-    //         console.log(data);
-    //     })
+  const state = useContext(appContext);
 
-    const state = useContext(appContext);
+  const connectMetamask = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const userAddress = await provider.send("eth_requestAccounts", []);
+    console.log(userAddress[0]);
+    const signer = provider.getSigner();
 
-    const connectMetamask = async () => {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const userAddress = await provider.send("eth_requestAccounts", []);
-      console.log(userAddress[0]);
-      const signer = provider.getSigner();
-
-      if(userAddress[0]){
-        state.setConnected(true);
-        console.log(state.connected);
-      }
-
-      const contractAdd = "0x15bd20Ae6a8d037c25ad953d578ECE7185e2D3B9";
-      const contractABI = [
-        {
-          name: 'mint',
-          type: 'function',
-          stateMutability: 'nonpayable',
-          inputs: [],
-          outputs: [],
-      },
-      ];
-      const tokenURI = "https://ipfs.io/ipfs/bafyreid3nnmark6n22d5bxy6kshdznzogkkk5zw4kpurm3idrkdkdjvdlm/metadata.json";
-
-      const mintContract = new ethers.Contract(contractAdd, contractABI, signer);
-      const mintNFT = await mintContract.mint(
-        // userAddress[0], tokenURI, "1",
-        {gasLimit: BigNumber.from(210000)}
-      );
-      console.log(mintNFT);
+    if (userAddress[0]) {
+      await state.setConnected(true);
+      console.log(state.connected);
     }
 
-    
+    const contractAdd = "0x6CC44d5c5A191EDFd50655849dE2D6bdCE6db2DE";
+    const contractABI = [
+      {
+        inputs: [
+          { internalType: "address", name: "recipient", type: "address" },
+          { internalType: "string", name: "tokenURI", type: "string" },
+          { internalType: "uint256", name: "quantity", type: "uint256" },
+        ],
+        name: "mint",
+        outputs: [],
+        stateMutability: "payable",
+        type: "function",
+      },
+    ];
+
+    const tokenURI =
+      "https://ipfs.io/ipfs/bafyreid3nnmark6n22d5bxy6kshdznzogkkk5zw4kpurm3idrkdkdjvdlm/metadata.json";
+
+    const mintContract = new ethers.Contract(contractAdd, contractABI, signer);
+    const mintNFT = await mintContract.mint(userAddress[0], tokenURI, 1, {
+      gasLimit: BigNumber.from(210000),
+      value: parseEther(0.0000000000)
+    });
+    console.log(mintNFT);
+  };
+
   return (
     <>
       <section>
