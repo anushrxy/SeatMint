@@ -1,9 +1,15 @@
 import React from "react";
 import { useState } from "react";
-// import api from 'api';
-
+import { app } from "../../assets/Firebaseconfig";
+import { getDatabase, onValue, ref, set } from "firebase/database";
+import { useContext } from "react";
+import appContext from "../../Context/appContext";
+import { ethers } from "ethers";
 
 function ListingForm() {
+  const state = useContext(appContext);
+  const chain = "goerli";
+
   const [eventName, seteventName] = useState("");
   const [genre, setgenre] = useState("");
   const [venue, setvenue] = useState("");
@@ -11,35 +17,136 @@ function ListingForm() {
   const [quantity, setquantity] = useState(0);
   const [price, setprice] = useState(0);
 
-  const [dataIPFS, setdataIPFS] = useState("");
+  const [buttonState, setbuttonState] = useState(0);
 
-  const [ipfsURI, setipfsURI] = useState("");
-  const [imageURI, setimageURI] = useState("");
+  // const [ipfsURI, setipfsURI] = useState("");
+  // const [imageURI, setimageURI] = useState("");
+  // const [contractAdd, setcontractAdd] = useState("");
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+  function randomString() {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let result = "";
+    for (let i = 0; i < 4; i++) {
+      result += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return result;
+  }
 
   const createEvent = async () => {
+    const userAddress = await provider.send("eth_requestAccounts", []);
+    console.log(userAddress[0]);
 
-    // Verbwire Config
-    // const sdk = api('@verbwire/v1.0#bmqq91mlh2f0wis');
-    // sdk.auth("sk_live_2193b1f6-41cf-4d27-a182-2c9b94ac495b");
+    const options = {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "X-API-Key": "sk_live_be813afb-60e2-4974-ab9e-0bb5f988e3f3",
+      },
+    };
 
-    // Storing Metadata on IPFS.
-    
+    async function storeIPFS(){
+      setbuttonState(1);
 
-    // await sdk.postNftStoreMetadatafromimage(
-    //     {
-    //       description: `SeatMint Ticket for ${eventName}`,
-    //       name: eventName,
-    //       filePath: file,
-    //       data: `[
-    //         {'trait_type': 'Venue', 'value': ${venue}},
-    //         {'trait_type': 'Genre', 'value': ${genre}},
-    //     ]`,
-    //     },
-    //     { accept: "application/json" }
-    //   )
-    //   .then(({ data }) => setdataIPFS(data))
-    //   .catch((err) => console.error(err));
-    //   console.log(dataIPFS);
+      const form = new FormData();
+      form.append("description", `SeatMint Ticket for ${eventName}`);
+      form.append("name", eventName);
+      form.append("filePath", file);
+      form.append(
+        "data",
+        `[{'trait_type': 'Venue', 'value': ${venue}}, {'trait_type': 'Genre', 'value': ${genre}},]`
+      );
+      options.body = form;
+
+      const response = await fetch(
+        "https://api.verbwire.com/v1/nft/store/metadataFromImage",
+        options
+      );
+      response.json()
+      .then((data) =>{
+        console.log([data.ipfs_storage.ipfs_url, data.ipfs_storage.metadata_url]);
+        const arr = [data.ipfs_storage.ipfs_url, data.ipfs_storage.metadata_url]
+        return arr;
+      })
+      setbuttonState(3);
+    }
+
+    async function updateContract(contractAddress) {
+          const form2 = new FormData();
+          form2.append("chain", chain);
+          form2.append("contractAddress",contractAddress);
+          form2.append("mintPriceInWei", price);
+          options.body = form2;
+          fetch(
+            "https://api.verbwire.com/v1/nft/update/setMintPrice",
+            options
+          ).then((response) => {response.json()})
+          .then(setbuttonState(5));
+          return contractAddress;
+
+    }
+
+    async function eventContractCreate() {
+      const symbol = randomString();
+        console.log(symbol);
+        const form = new FormData();
+        form.append("chain", chain);
+        form.append("contractType", "nft721");
+        form.append("contractCategory", "advanced");
+        form.append("isCollectionContract", "false");
+        form.append("contractName", eventName);
+        form.append("contractSymbol", symbol);
+        form.append("recipientAddress", userAddress[0]);
+        options.body = form;
+
+        fetch(
+          "https://api.verbwire.com/v1/nft/deploy/deployContract",
+          options
+        ).then((response) => {response.json()})
+        .then((data) => {
+          // Call Contract
+          return updateContract(data.transaction_details.createdContractAddress); 
+        });
+
+
+          
+        
+    }
+
+    async function updateFirebaseData(ipfsArray, addressContract) {
+      console.log(`Updating...`)
+      const db = getDatabase(app);
+      await set(ref(db, `events/${addressContract}`), {
+            name: eventName,
+            picture: ipfsArray[0],
+            metadata: ipfsArray[1],
+            Venue: venue,
+            Genre: genre,
+            Tickets: quantity,
+            Remaining: quantity,
+            Price: price            
+      });
+          setbuttonState(6);
+    }
+
+    try {
+      // IPFS Storage for NFT Metadata.
+      const ipfsArray = await storeIPFS();
+
+      // Creating Smart Contract
+      const addressContract = await eventContractCreate();
+
+      // Updating with Firebase
+      await updateFirebaseData(ipfsArray, addressContract);
+      
+
+    } catch (error) {
+      setbuttonState(34);
+      console.error(error);
+    }
   };
 
   return (
@@ -140,8 +247,21 @@ function ListingForm() {
                   type="submit"
                   className="inline-block w-full rounded-lg bg-teal-600 px-5 py-3 font-medium text-white sm:w-auto"
                   onClick={createEvent}
+                  disabled={buttonState == 0 || 34 || 6 ? false : true}
                 >
-                  List Tickets
+                  {buttonState == 0
+                    ? `List Event`
+                    : buttonState == 1
+                    ? `Storing files...`
+                    : buttonState == 3
+                    ? `Creating Contract...`
+                    : buttonState == 5
+                    ? `Updating Database...`
+                    : buttonState == 6
+                    ? `Done...`
+                    : buttonState == 34
+                    ? `Error`
+                    : `Invalid`}
                 </button>
               </div>
             </div>

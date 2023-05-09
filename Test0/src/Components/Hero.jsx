@@ -32,7 +32,9 @@ function Hero() {
     const signer = provider.getSigner();
 
     if (userAddress[0]) {
-      await state.setConnected(true);
+      state.setConnected(true);
+      state.setUserAddress(userAddress[0]);
+
       console.log(state.connected);
     }
 
