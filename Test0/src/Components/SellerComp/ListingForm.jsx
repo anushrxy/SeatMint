@@ -18,10 +18,11 @@ function ListingForm() {
   const [price, setprice] = useState(0);
 
   const [buttonState, setbuttonState] = useState(0);
+  const [arr, setarr] = useState([]);
+  const [addressContract, setaddressContract] = useState("");
+  const [updated, setupdated] = useState(false);
 
-  // const [ipfsURI, setipfsURI] = useState("");
-  // const [imageURI, setimageURI] = useState("");
-  // const [contractAdd, setcontractAdd] = useState("");
+
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
@@ -44,7 +45,7 @@ function ListingForm() {
       method: "POST",
       headers: {
         accept: "application/json",
-        "X-API-Key": "sk_live_be813afb-60e2-4974-ab9e-0bb5f988e3f3",
+        "X-API-Key": "sk_live_6877ba7f-ce49-4179-a95d-952b5cb0683b",
       },
     };
 
@@ -68,24 +69,32 @@ function ListingForm() {
       response.json()
       .then((data) =>{
         console.log([data.ipfs_storage.ipfs_url, data.ipfs_storage.metadata_url]);
-        const arr = [data.ipfs_storage.ipfs_url, data.ipfs_storage.metadata_url]
-        return arr;
+        const arr = [data.ipfs_storage.ipfs_url, data.ipfs_storage.metadata_url];
+        setarr(arr);
+        setbuttonState(3);
       })
-      setbuttonState(3);
+      return arr;
     }
 
-    async function updateContract(contractAddress) {
+    async function updateContract(contractAddress2) {
+          console.log("Running Update...")
           const form2 = new FormData();
           form2.append("chain", chain);
-          form2.append("contractAddress",contractAddress);
+          form2.append("contractAddress",contractAddress2);
           form2.append("mintPriceInWei", price);
           options.body = form2;
-          fetch(
+          const response = await fetch(
             "https://api.verbwire.com/v1/nft/update/setMintPrice",
             options
-          ).then((response) => {response.json()})
-          .then(setbuttonState(5));
-          return contractAddress;
+          );
+          response.json()
+          .then((data)=>{
+            if(data.transaction_details.status == "Sent"){
+              setupdated(true);
+              setbuttonState(5);
+            }
+          })
+          return updated;
 
     }
 
@@ -102,45 +111,57 @@ function ListingForm() {
         form.append("recipientAddress", userAddress[0]);
         options.body = form;
 
-        fetch(
+        const response = await fetch(
           "https://api.verbwire.com/v1/nft/deploy/deployContract",
           options
-        ).then((response) => {response.json()})
+        );
+        response.json()
         .then((data) => {
           // Call Contract
-          return updateContract(data.transaction_details.createdContractAddress); 
-        });
+          const addressContracttemp = data.transaction_details.createdContractAddress; 
+          setaddressContract(addressContracttemp);
+          console.log(addressContracttemp);
+        })
+        return addressContract;
 
 
           
         
     }
 
-    async function updateFirebaseData(ipfsArray, addressContract) {
-      console.log(`Updating...`)
+    async function updateFirebaseData() {
+
+      
+
+      // IPFS Storage for NFT Metadata.
+      const ipfsArray = await storeIPFS();
+
+      // Creating Smart Contract
+      const addressContract1 = await eventContractCreate();
+      const isUpdated = await updateContract(addressContract);
+      console.log(isUpdated);
+      
+
+      console.log("Update Database Start..")
       const db = getDatabase(app);
-      await set(ref(db, `events/${addressContract}`), {
+      set(ref(db, `events/${addressContract1}`), {
             name: eventName,
             picture: ipfsArray[0],
             metadata: ipfsArray[1],
-            Venue: venue,
-            Genre: genre,
-            Tickets: quantity,
-            Remaining: quantity,
-            Price: price            
+            venue: venue,
+            genre: genre,
+            tickets: quantity,
+            remaining: quantity,
+            Price: price,
+            owner: userAddress[0]            
       });
           setbuttonState(6);
     }
 
     try {
-      // IPFS Storage for NFT Metadata.
-      const ipfsArray = await storeIPFS();
-
-      // Creating Smart Contract
-      const addressContract = await eventContractCreate();
-
+      
       // Updating with Firebase
-      await updateFirebaseData(ipfsArray, addressContract);
+      updateFirebaseData();
       
 
     } catch (error) {
