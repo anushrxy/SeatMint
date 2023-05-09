@@ -19,6 +19,7 @@ function ListingForm() {
 
   const [buttonState, setbuttonState] = useState(0);
   const [arr, setarr] = useState([]);
+  const [createdAdd, setcreatedAdd] = useState("");
   const [addressContract, setaddressContract] = useState("");
   const [updated, setupdated] = useState(false);
 
@@ -83,13 +84,13 @@ function ListingForm() {
           form2.append("contractAddress",contractAddress2);
           form2.append("mintPriceInWei", price);
           options.body = form2;
-          const response = await fetch(
+          const response2 = await fetch(
             "https://api.verbwire.com/v1/nft/update/setMintPrice",
             options
           );
-          response.json()
-          .then((data)=>{
-            if(data.transaction_details.status == "Sent"){
+          response2.json()
+          .then((data2)=>{
+            if(data2.transaction_details.status == "Sent"){
               setupdated(true);
               setbuttonState(5);
             }
@@ -111,22 +112,19 @@ function ListingForm() {
         form.append("recipientAddress", userAddress[0]);
         options.body = form;
 
-        const response = await fetch(
+        const response3 = await fetch(
           "https://api.verbwire.com/v1/nft/deploy/deployContract",
           options
         );
-        response.json()
-        .then((data) => {
+        response3.json()
+        .then((data3) => {
           // Call Contract
-          const addressContracttemp = data.transaction_details.createdContractAddress; 
-          setaddressContract(addressContracttemp);
-          console.log(addressContracttemp);
+          const addressContracttemp = data3.transaction_details.createdContractAddress; 
+          setcreatedAdd(addressContracttemp);
+          // console.log(addressContracttemp);
         })
-        return addressContract;
-
-
-          
-        
+        return createdAdd;
+       
     }
 
     async function updateFirebaseData() {
@@ -138,7 +136,7 @@ function ListingForm() {
 
       // Creating Smart Contract
       const addressContract1 = await eventContractCreate();
-      const isUpdated = await updateContract(addressContract);
+      const isUpdated = await updateContract(createdAdd);
       console.log(isUpdated);
       
 
@@ -268,7 +266,7 @@ function ListingForm() {
                   type="submit"
                   className="inline-block w-full rounded-lg bg-teal-600 px-5 py-3 font-medium text-white sm:w-auto"
                   onClick={createEvent}
-                  disabled={buttonState == 0 || 34 || 6 ? false : true}
+                  // disabled={buttonState == 0 || 34 || 6 ? `false` : `true`}
                 >
                   {buttonState == 0
                     ? `List Event`
