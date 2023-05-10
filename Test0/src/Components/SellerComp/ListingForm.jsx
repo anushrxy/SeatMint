@@ -1,12 +1,14 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { app } from "../../assets/Firebaseconfig";
 import { getDatabase, onValue, ref, set } from "firebase/database";
 import { useContext } from "react";
 import appContext from "../../Context/appContext";
 import { ethers } from "ethers";
+import { apiKey } from "../../Exports";
 
 function ListingForm() {
+
   const state = useContext(appContext);
   const chain = "goerli";
 
@@ -14,8 +16,8 @@ function ListingForm() {
   const [genre, setgenre] = useState("");
   const [venue, setvenue] = useState("");
   const [file, setfile] = useState(null);
-  const [quantity, setquantity] = useState(0);
-  const [price, setprice] = useState(0);
+  const [quantity, setquantity] = useState("");
+  const [price, setprice] = useState("");
 
   const [buttonState, setbuttonState] = useState(0);
   const [arr, setarr] = useState();
@@ -23,6 +25,22 @@ function ListingForm() {
   const [updated, setupdated] = useState(false);
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+  useEffect(() => {
+    if(buttonState == 6){
+      function resetPage(){
+        seteventName("");
+        setgenre("");
+        setvenue("");
+        setfile(null);
+        setquantity("");
+        setprice("");
+      }
+      setTimeout(resetPage, 5000);
+    }
+
+  }, [buttonState])
+  
 
   function randomString() {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -43,7 +61,7 @@ function ListingForm() {
       method: "POST",
       headers: {
         accept: "application/json",
-        "X-API-Key": "sk_live_d5d3010c-307c-4ef8-baf5-591bb8419fd9",
+        "X-API-Key": apiKey,
       },
     };
 
@@ -105,7 +123,7 @@ function ListingForm() {
           console.log("Update Database Start..");
           console.log(arr)
           const db = getDatabase(app);
-          set(ref(db, `events/${addressContract}`), {
+          set(ref(db, `events/${contractAddress2}`), {
             name: eventName,
             picture: data1.ipfs_storage.ipfs_url,
             metadata: data1.ipfs_storage.metadata_url,
@@ -187,6 +205,7 @@ function ListingForm() {
                     placeholder="Event Name"
                     type="event-name"
                     id="event-name"
+                    value={eventName}
                     onChange={(e) => seteventName(e.target.value)}
                   />
                 </div>
@@ -201,6 +220,7 @@ function ListingForm() {
                       placeholder="Venue"
                       type="Venue"
                       id="Venue"
+                      value={venue}
                       onChange={(e) => setvenue(e.target.value)}
                     />
                   </div>
@@ -214,6 +234,7 @@ function ListingForm() {
                       placeholder="Genre"
                       type="genre"
                       id="genre"
+                      value= {genre}
                       onChange={(e) => setgenre(e.target.value)}
                     />
                   </div>
@@ -245,6 +266,7 @@ function ListingForm() {
                       placeholder="Seats Quantity"
                       type="seats"
                       id="seats"
+                      value= {quantity}
                       onChange={(e) => setquantity(e.target.value)}
                     />
                   </div>
@@ -258,6 +280,7 @@ function ListingForm() {
                       placeholder="Price Per Ticket"
                       type="price"
                       id="price"
+                      value = {price}
                       onChange={(e) => setprice(e.target.value)}
                     />
                   </div>

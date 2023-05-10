@@ -7,12 +7,13 @@ import Hero from "./Components/Hero.jsx";
 import UspSection from "./Components/UspSection.jsx";
 import NavBuyer from "./Components/BuyerComp/NavBuyer.jsx";
 import Banner from "./Components/BuyerComp/Banner.jsx";
-import Cards from "./Components/BuyerComp/Cards.jsx";
+import Cards from "./Components/BuyerComp/DirectBuyCards.jsx";
 import ListHeadings from "./Components/SellerComp/ListHeadings.jsx";
 import NavSeller from "./Components/SellerComp/NavSeller.jsx";
 import ListingForm from "./Components/SellerComp/ListingForm.jsx";
 import ViewSales from "./Components/SellerComp/ViewSales.jsx";
 import appContext from "./Context/appContext";
+import OwnedCards from "./Components/BuyerComp/OwnedCards";
 
 
 function App() {
@@ -55,6 +56,7 @@ const state = useContext(appContext);
               h2="Secure Your Seats."
               description="Say goodbye to paper tickets and enjoy the peace of mind that comes with owning your tickets as NFTs."
             />
+            <Cards />
             </>
           }/>
           <Route  path="/buyer/resell" element={
@@ -79,7 +81,7 @@ const state = useContext(appContext);
               h2="Unleash Your Tickets"
               description="Easily access and view your owned tickets as NFTs, and never worry about losing or misplacing them again."
             />
-            <Cards />
+            <OwnedCards />
             </>
           }/>
           <Route  path="/seller" element={
