@@ -7,6 +7,8 @@ function Cards() {
   const firebasedb = getDatabase();
   const [buyDirect, setbuyDirect] = useState({});
   
+  
+  
   async function getData(){
     const eventsListed = await ref(firebasedb, 'events/');
     onValue(eventsListed, (snapshot) => {
@@ -36,7 +38,8 @@ function Cards() {
                   price={buyDirect[key].Price}
                   picture={buyDirect[key].picture}
                   contract={key}
-                  metadata={buyDirect[key].metadata} 
+                  metadata={buyDirect[key].metadata}
+                  remaining={buyDirect[key].remaining} 
                 />
               </li>
             ))}

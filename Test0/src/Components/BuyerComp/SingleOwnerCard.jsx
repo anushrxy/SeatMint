@@ -27,4 +27,4 @@ function SingleOwnerCard(props) {
   )
 }
 
-export default SingleOwnerCard
+export default SingleOwnerCard;

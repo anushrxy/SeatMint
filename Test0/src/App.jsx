@@ -14,6 +14,7 @@ import ListingForm from "./Components/SellerComp/ListingForm.jsx";
 import ViewSales from "./Components/SellerComp/ViewSales.jsx";
 import appContext from "./Context/appContext";
 import OwnedCards from "./Components/BuyerComp/OwnedCards";
+import UnlistedCards from "./Components/BuyerComp/UnlistedCards";
 
 
 function App() {
@@ -70,7 +71,7 @@ const state = useContext(appContext);
             <ListHeadings text="Listed for Resell"/>
             <Cards />
             <ListHeadings text="Unlisted Holdings"/>
-            <Cards />
+            <UnlistedCards />
             </>
           }/>
           <Route  path="/buyer/view-owned" element={
