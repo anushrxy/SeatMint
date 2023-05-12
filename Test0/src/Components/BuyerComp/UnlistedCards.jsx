@@ -9,48 +9,50 @@ function UnlistedCards() {
     const [ownedNftObject, setownedNftObject] = useState({});
     const [displayNft, setdisplayNft] = useState({});
 
-    async function removeListed(displayObject) {
+    async function removeListed(data, datatemp){
+      const nftData = data.nfts;
+      const newNftArray = [];
+
       const db = getDatabase();
-      const OwnedRef = ref(db, 'resell/');
-      onValue(OwnedRef, (snapshot) =>{
-        const datatemp2 = snapshot.val();
-        console.log("display Object");
-        console.log(displayObject);
-        console.log("datatemp");
-        console.log(datatemp2);
-        for(let prop in displayObject){
-          for(let prop2 in datatemp2){
-            // console.log(displayObject[prop]);
-            if(prop.toLowerCase() == prop2.toLowerCase() && displayObject[prop].tokenId == datatemp2[prop2].tokenId){
-              delete (displayObject[prop]);
-              // May have issues because of loop.
+        const ResellRef = ref(db, 'resell/');
+        onValue(ResellRef, (snapshot) =>{
+            const datatemp3 = snapshot.val();
+            for(let key in datatemp3){
+              for(let j =0 ; j< nftData.length; j++){
+                let keyObject = datatemp3[key];
+                let nftObject2 = nftData[j];
+                console.log(`Logged...`);
+                console.log(nftObject2);
+                if(nftObject2){
+                  if(key.toLowerCase() != nftObject2.contractAddress.toLowerCase() || keyObject.tokenId != nftObject2.tokenID){
+                    newNftArray.push(nftObject2);
+                  }
+                }
+              }
             }
-          }
-        }
-      })
-            
-        
-        setdisplayNft(displayObject)//Inputs Here. 
+            console.log(newNftArray);
+            sortObject(newNftArray, datatemp);
+
+        })
     }
     
     async function sortObject(data, datatemp){
         let displayObject = [];
-        data = data.nfts;
         console.log(data);
-        for(let prop in datatemp){
-            for(let i = 0; i<data.length; i++){
+        for(let i = 0; i<data.length; i++){
+              for(let prop in datatemp){
               console.log(data[i].contractAddress , prop);
               // console.log(data[i].contractAddress === prop);
               if(data[i].contractAddress.toLowerCase() == prop.toLowerCase()) {
                 let object = datatemp[prop];
                 let object2 = data[i];
-                object.tokenId = object2[tokenID];
+                object.tokenId = object2.tokenID ;
                 displayObject.push(object);
               } 
             }
         }
         console.log(displayObject);
-        removeListed(displayObject);
+        setdisplayNft(displayObject);
     }
 
 
@@ -59,6 +61,7 @@ function UnlistedCards() {
         const OwnedRef = ref(db, 'events/');
         onValue(OwnedRef, (snapshot) =>{
             const datatemp = snapshot.val();
+            console.log("First DB Fetch.")
             console.log(datatemp);
             // sortObject(datatemp);
             getNFTs(datatemp);
@@ -82,9 +85,11 @@ function UnlistedCards() {
           fetch(`https://api.verbwire.com/v1/nft/data/owned?walletAddress=${userAdd}&chain=goerli`, options)
             .then(response => response.json())
             .then(response => {
-                setownedNftObject(response);
+                // setownedNftObject(response);
+                console.log("API Fetch")
                 console.log(response);
-                sortObject(response, datatemp);
+                // sortObject(response, datatemp);
+                removeListed(response,datatemp);
             })
             .catch(err => console.error(err));
         
