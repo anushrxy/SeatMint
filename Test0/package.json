@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@thirdweb-dev/react": "^3.11.11",
     "api": "^5.0.8",
     "ethers": "^5.7.2",
     "firebase": "^9.21.0",

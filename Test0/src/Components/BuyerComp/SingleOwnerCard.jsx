@@ -1,4 +1,3 @@
-import { MediaRenderer } from '@thirdweb-dev/react';
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -6,7 +5,7 @@ function SingleOwnerCard(props) {
   return (
     <>
       <Link to="#" className="group relative block overflow-hidden">
-        <MediaRenderer
+        <img
           src={props.picture}
           alt={`Picture for ${props.name}`}
           className="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72"

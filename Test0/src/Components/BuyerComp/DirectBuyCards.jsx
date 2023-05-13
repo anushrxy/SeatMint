@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
+import SingleCard from "./SingleCard";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { async } from "@firebase/util";
-import SinglePeerBuyCard from "./SinglePeerBuyCard";
 
 function Cards() {
   const firebasedb = getDatabase();
@@ -31,7 +31,7 @@ function Cards() {
           {Object.keys(buyDirect).map((key) => (
             // {console.log(key);}
               <li key={key}>
-                <SinglePeerBuyCard
+                <SingleCard
                   name={buyDirect[key].name}
                   venue={buyDirect[key].venue}
                   genre={buyDirect[key].genre}

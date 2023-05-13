@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { getDatabase, set, ref } from "firebase/database";
 import { ethers } from "ethers";
-import { MediaRenderer } from "@thirdweb-dev/react";
 
 function SingleUnlistedOwnedCard(props) {
   const [resellPrice, setresellPrice] = useState("");
@@ -28,7 +27,7 @@ function SingleUnlistedOwnedCard(props) {
   return (
     <>
       <Link to="#" className="group relative block overflow-hidden">
-        <MediaRenderer
+        <img
           src={props.picture}
           alt={`Picture for ${props.name}`}
           className="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72"

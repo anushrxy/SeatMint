@@ -17,7 +17,6 @@ import OwnedCards from "./Components/BuyerComp/OwnedCards";
 import UnlistedCards from "./Components/BuyerComp/UnlistedCards";
 import ListedResellCards from "./Components/BuyerComp/ListedResellCards";
 import Verify from "./Components/SellerComp/Verify";
-import PeerBuyCards from "./Components/BuyerComp/PeerBuyCards";
 
 function App() {
   const state = useContext(appContext);
@@ -49,11 +48,7 @@ function App() {
                     h2="Secure Your Seats."
                     description="Say goodbye to paper tickets and enjoy the peace of mind that comes with owning your tickets as NFTs."
                   />
-                  <ListHeadings text="Direct Buy" />
                   <Cards />
-                  <ListHeadings text="Buy from Peers" />
-                  <PeerBuyCards />
-                  
                 </>
               }
             />
@@ -67,9 +62,7 @@ function App() {
                     h2="Secure Your Seats."
                     description="Say goodbye to paper tickets and enjoy the peace of mind that comes with owning your tickets as NFTs."
                   />
-                  <ListHeadings text="Direct Buy" />
                   <Cards />
-                  <ListHeadings text="Buy from Peers" />
                 </>
               }
             />

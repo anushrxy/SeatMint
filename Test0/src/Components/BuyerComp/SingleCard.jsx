@@ -5,8 +5,6 @@ import { ethers, BigNumber } from "ethers";
 import { utils } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 import { getDatabase, ref, set } from "firebase/database";
-import { MediaRenderer } from "@thirdweb-dev/react";
-
 
 function SingleCard(props) {
   const [purchased, setpurchased] = useState(false);
@@ -60,7 +58,7 @@ function SingleCard(props) {
   return (
     <>
       <Link to="#" className="group relative block overflow-hidden">
-        <MediaRenderer
+        <img
           src={props.picture}
           alt={`Picture for ${props.name}`}
           className="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72"
