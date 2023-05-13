@@ -71,7 +71,7 @@ function SingleCard(props) {
           <p className="mt-1.5 text-lg text-gray-200">{`Venue: ${props.venue}`}</p>
           <p className="mt-1.5 text-md text-gray-300">{`Genre: ${props.genre}`}</p>
           <p className="mt-1.5 text-md text-gray-300">
-            {`Price: ${props.price} WEI`}{" "}
+            {`Price: ${props.price} ETH`}{" "}
           </p>
 
           <div className="flex">
