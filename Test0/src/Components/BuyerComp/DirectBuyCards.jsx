@@ -40,6 +40,8 @@ function Cards() {
                   contract={key}
                   metadata={buyDirect[key].metadata}
                   remaining={buyDirect[key].remaining} 
+                  owner={buyDirect[key].owner}
+                  tickets={buyDirect[key].tickets}
                 />
               </li>
             ))}

@@ -20,6 +20,14 @@ function SingleCard(props) {
   async function updateDB() {
     const db = getDatabase();
     set(ref(db, "events/" + props.contract), {
+      name: props.name,
+      picture: props.picture,
+      metadata: props.metadata,
+      venue: props.venue,
+      genre: props.genre,
+      tickets: props.tickets,
+      Price: props.price,
+      owner: props.owner,
       remaining: props.remaining - 1
     }).then(setpurchased(true));
   }
