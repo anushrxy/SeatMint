@@ -1,3 +1,4 @@
+import { MediaRenderer } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
 import { getDatabase, onValue, ref } from "firebase/database";
 import React, { useEffect, useState } from "react";
@@ -49,6 +50,7 @@ function ViewSales() {
   }
   useEffect(() => {
     fetchSales();
+    
     console.log("Running")
   },[]);
 
@@ -64,7 +66,7 @@ function ViewSales() {
                   className="space-y-4"
                   key={key}>
                     <li className="flex items-center gap-4">
-                      <img
+                      <MediaRenderer
                         src= {displayObj[key].picture}
                         alt="Event Poster"
                         className="h-28 w-28 rounded object-cover"
