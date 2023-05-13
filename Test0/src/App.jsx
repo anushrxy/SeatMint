@@ -15,6 +15,7 @@ import ViewSales from "./Components/SellerComp/ViewSales.jsx";
 import appContext from "./Context/appContext";
 import OwnedCards from "./Components/BuyerComp/OwnedCards";
 import UnlistedCards from "./Components/BuyerComp/UnlistedCards";
+import ListedResellCards from "./Components/BuyerComp/ListedResellCards";
 
 
 function App() {
@@ -68,10 +69,10 @@ const state = useContext(appContext);
               h2="Re-sell with Ease."
               description="With just a few taps, you can list your tickets for sale on our marketplace and connect with buyers who are eager to attend the event. 5% of the selling price will go to the Creator."
             />
-            <ListHeadings text="Listed for Resell"/>
-            <Cards />
             <ListHeadings text="Unlisted Holdings"/>
             <UnlistedCards />
+            <ListHeadings text="Listed for Resell"/>
+            <ListedResellCards />
             </>
           }/>
           <Route  path="/buyer/view-owned" element={

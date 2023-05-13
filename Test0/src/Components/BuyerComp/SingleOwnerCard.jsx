@@ -15,7 +15,7 @@ function SingleOwnerCard(props) {
           <h3 className="mt-4 text-xl font-medium text-gray-100">{props.name}</h3>
           <p className="mt-1.5 text-lg text-gray-200">{`Venue: ${props.venue}`}</p>
           <p className="mt-1.5 text-md text-gray-300">{`Genre: ${props.genre}`}</p>
-          <p className="mt-1.5 text-md text-gray-300">{`Bought For: ${props.price} WEI`} </p>
+          <p className="mt-1.5 text-md text-gray-300">{`Price: ${props.price} ETH`} </p>
 
           <div className="flex">
 
