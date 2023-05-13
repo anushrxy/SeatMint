@@ -6,7 +6,7 @@ function ViewSales() {
   const [userAddress, setuserAddress] = useState("");
   const [displayObj, setdisplayObj] = useState([]);
   const [total, setTotal] = useState(0);
-  const [displayArr, setDisplayArr] = useState([]);
+  
 
 
   async function fetchSales() {
@@ -24,12 +24,12 @@ function ViewSales() {
   }
   
   async function processSalesObj(objEvents) {
-  
+    let displayArr = [];
     for(let contAdd in objEvents) {
       console.log("For Running")
       let owner = objEvents[contAdd].owner;
       if (userAddress.toLowerCase() == owner.toLowerCase()) {
-        setDisplayArr(displayArr => [...displayArr,objEvents[contAdd]]);
+        displayArr.push(objEvents[contAdd]);
       }
     }
     setdisplayObj(displayArr);
