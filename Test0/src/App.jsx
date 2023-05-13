@@ -18,6 +18,7 @@ import UnlistedCards from "./Components/BuyerComp/UnlistedCards";
 import ListedResellCards from "./Components/BuyerComp/ListedResellCards";
 import Verify from "./Components/SellerComp/Verify";
 import PeerBuyCards from "./Components/BuyerComp/PeerBuyCards";
+import Footer from "./Footer";
 
 function App() {
   const state = useContext(appContext);
@@ -159,6 +160,9 @@ function App() {
               }
             />
           </Routes>
+          <footer>
+            <Footer/>
+          </footer>
         </AppState>
       </div>
     </>
